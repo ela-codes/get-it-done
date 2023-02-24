@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
+    <script defer src="main.js"></script>
+    <title>Get It Done</title>
+</head>
+<body>
+    <div class="container">
+        <header><h1>GET IT DONE</h1></header>
+
+        <div class="content">
+            <div class="list-container">
+                <div class="list-top-bar">
+                    <div class="list-title"><h2>Today's Tasks</h3></div>
+                    <div class="list-btns">
+                        <button class="hide">Hide Completed</button>
+                        <button class="delete">Delete List</button>
+                    </div>
+                </div>
+                <div class="list-content">
+                    <!-- Append here for new lists -->
+                    <form class="today-form">
+                        <div>
+                            <input type="checkbox" id="t1" name="task" value="Read a book">
+                            <label for="t1">Read a book</label>
+                            <input type="date" id="t1" name="due-date">
+                        </div>
+                        <div>
+                            <input type="checkbox" id="t2" name="task" value="Take dog for a walk">
+                            <label for="t2">Take dog for a walk</label>
+                            <input type="date" id="t2" name="due-date">
+                        </div>
+                        <div>
+                            <input type="checkbox" id="t3" name="task" value="Make sure my assignments are done on time and my professor receives my email including the attached documents, pictures, and description of project objectives">
+                            <label for="t3">Make sure my assignments are done on time and my professor receives my email including the attached documents, pictures, and description of project objectives</label>
+                            <input type="date" id="t3" name="due-date">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-nav">
+                <div class="sidebar-title"><h4>My Lists</h4></div>
+                <div class="sidebar-lists">
+                    <div class="sidebar-item today">Today</div>
+                    <div class="sidebar-item completed">Completed</div>
+
+                </div>
+                <button class="add-list">Add New List +</button>
+            </div>
+        </div>
+
+        <footer>    
+            <div>Created by <a class="github" href="https://github.com/ateodocio">ateodocio</a></div>
+        </footer>
+    </div>
+    
+</body>
+</html>
