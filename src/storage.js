@@ -27,8 +27,8 @@ function storageAvailable(type) {
 
 export function saveListToStorage(newList) {
     if(storageAvailable('localStorage')){
-        window.localStorage.setItem('storedLists', JSON.stringify(newList))
-        const mycheck = window.localStorage.getItem('storedLists')
+        localStorage.setItem('storedLists', JSON.stringify(newList))
+        const mycheck = localStorage.getItem('storedLists')
         console.log(JSON.parse(mycheck))
     }
 }
