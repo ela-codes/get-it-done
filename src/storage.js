@@ -1,3 +1,6 @@
+import { List } from './list.js';
+import { Task } from './task.js';
+
 function storageAvailable(type) {
     let storage;
     try {
@@ -25,10 +28,56 @@ function storageAvailable(type) {
 
 
 
-export function saveListToStorage(newList) {
-    if(storageAvailable('localStorage')){
-        localStorage.setItem('storedLists', JSON.stringify(newList))
-        const mycheck = localStorage.getItem('storedLists')
-        console.log(JSON.parse(mycheck))
+export function saveListToStorage(listObj) {
+    if (storageAvailable('localStorage')){
+        localStorage.setItem(listObj.listName, JSON.stringify(listObj))
+    } else {
+        console.warn('Storage not available')
     }
+}
+
+
+export function retrieveList(listName) {
+    const storedList = JSON.parse(localStorage.getItem(listName))
+    const newList = new List(storedList.name, storedList.tasks)
+    Object.assign(newList, storedList)
+    return newList
+}
+
+
+export function getStoredItems(listName) {
+
+    function recreateTasks(currList) {
+        const list = currList
+        for (let i = 0; i < list.totalLength() ; i++ ) {
+            const newTask = new Task(
+                list.allTasks[i].title,
+                list.allTasks[i].dueDate,
+                list.allTasks[i].status,
+                list.allTasks[i].id,
+                list.allTasks[i].displayed
+            )
+            Object.assign(newTask, list.allTasks[i])
+            list.allTasks[i] = newTask
+        } return list
+    }
+    const recreatedList = recreateTasks(retrieveList(listName))
+    return recreatedList
+}
+
+
+export function generateTaskID(listName) { 
+    if (localStorage.length === 0) { 
+        return 0
+    } else {
+        const listLength = retrieveList(listName).totalLength()
+        return listLength
+    }
+}
+
+
+function findTaskinStorage(listName, id) {
+    const list = getStoredItems(listName)
+    const foundTask = list.allTasks.find(item => item.id === id)
+    return foundTask
 }

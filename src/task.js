@@ -1,14 +1,18 @@
 export class Task {
-    constructor(title, dueDate, id) {
+    constructor(title, dueDate, status, id, displayed) {
         this.title = title;
         this.dueDate = dueDate;
-        this.status = false; // false = task is not done
-        this.id = id
+        this.status = status; // false = task is not done
+        this.id = id;
+        this.displayed = displayed;
     }
 
-
+    getID() {
+        return this.id
+    }
+    
     // GETTERS
-    get taskTitle() {
+    get currTitle() {
         return this.title
     }
 
@@ -20,8 +24,12 @@ export class Task {
         return this.status
     }
 
+    get displayedStatus() {
+        return this.displayed;
+    }
+
     //SETTERS
-    set taskTitle(newTitle) {
+    set currTitle(newTitle) {
         this.title = newTitle
     }
 
@@ -36,6 +44,9 @@ export class Task {
     set currStatus(newStatus) {
         this.status = newStatus
     }
-}
 
+    set displayedStatus(newDisplayStatus) {
+        this.displayed = newDisplayStatus
+    }
+}
 

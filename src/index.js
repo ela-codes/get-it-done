@@ -1,43 +1,62 @@
 import { Task } from './task.js';
-import { List} from './list.js';
-import { saveListToStorage } from './storage.js';
-import { getTodaysDate, showNewTask } from './userInterface.js';
-
-getTodaysDate()
+import { List } from './list.js';
+import { saveListToStorage, getStoredItems, generateTaskID } from './storage.js';
+import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus } from './userInterface.js';
 
 
-const taskInput = document.querySelector('input[name="new-task"]')
-const dateInput = document.querySelector('input[name="new-date"]')
+const defaultList = new List('Default')
+let activeList = defaultList;
+
+
+// ON WINDOW LOAD
+window.onload = () => {
+    getTodaysDate()
+
+    if (localStorage.length > 0) {
+        buildContentonLoad()
+    } else {
+        saveListToStorage(activeList)
+    }
+}
+
+function buildContentonLoad() {
+    const storedList = getStoredItems(activeList.listName)
+    loadOldTasks(storedList)
+    activeList = storedList
+    CheckBoxListener()
+}
+
+
+// TASK-RELATED EVENT LISTENERS
 const addBtn = document.querySelector('button.add')
 
 addBtn.addEventListener("click", () => {
+    const taskInput = document.querySelector('input[name="new-task"]')
+    const dateInput = document.querySelector('input[name="new-date"]')
     const currTask = new Task(
         taskInput.value, 
-        dateInput.value, 
-        `${activeList.totalLength() + 1}`
+        dateInput.value,
+        false,
+        generateTaskID(activeList.listName),
+        false
     )
+
     activeList.addTask = currTask
     saveListToStorage(activeList)
-    showNewTask(currTask)
+    loadNewTasks(getStoredItems(activeList.listName))
+    updateTaskDisplayStatus(currTask)
+    saveListToStorage(activeList)
+    CheckBoxListener()
 })
 
 
 
+function CheckBoxListener() {
+    const checkBoxes = document.querySelectorAll('.active-cb')
 
+    checkBoxes.forEach(box => box.addEventListener('change', () => {
+        activeList.allTasks[box.id].currStatus = box.checked
+        saveListToStorage(activeList)
+    }))
 
-
-// DEFAULT TASKS
-
-const t1 = new Task('Read a book', '2023-02-27', '1')
-const t2 = new Task('Take dog for a walk', '2023-02-27', '2')
-
-const defaultList = new List('default')
-let activeList = defaultList;
-
-activeList.addTask = t1
-activeList.addTask = t2
-
-saveListToStorage(activeList)
-console.log(activeList.totalLength())
-
-
+}
