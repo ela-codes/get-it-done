@@ -32,14 +32,11 @@ export function applyListenersOnLoad() {
     function deleteBtnListener() {
         const deleteBtns = document.querySelectorAll('.delete-task')
     
-        deleteBtns.forEach(btn => btn.addEventListener('click', () => {
-            removeTaskFromUI(btn.parentElement)
-            activeList.deleteTask(btn.id)
-            saveListToStorage(activeList)
-            updateAllTaskID(activeList)
-            saveListToStorage(activeList)
-    
-        }))
+        deleteBtns.forEach(btn => 
+            btn.addEventListener('click', () => {
+            deleteTask(btn, activeList)
+            })
+        )
     }
     checkBoxListener()
     deleteBtnListener()
@@ -61,14 +58,36 @@ function applyListenerOnNewTask() {
         const btn = document.querySelector(`button[id="${taskID}"]`)
 
         btn.addEventListener('click', () => {
-            removeTaskFromUI(btn.parentElement)
-            activeList.deleteTask(btn.id)
-            saveListToStorage(activeList)
-            updateAllTaskID(activeList)
-            saveListToStorage(activeList)
-
+            deleteTask(btn, activeList)
         })
     }
     newCheckBoxListener(activeList.latestTask().currID)
     newDeleteBtnListener(activeList.latestTask().currID)
+}
+
+
+export function deleteCompleted() {
+    const btn = document.querySelector('.delete-completed')
+    btn.addEventListener('click', () => {
+        // check if there are any boxes checked
+        // if yes, delete tasks from list and UI
+        // if no, consider the button pointless. maybe play an 'cleaned' animation?
+        const checkboxes = document.querySelectorAll('.active-cb')
+        console.log(checkboxes)
+        checkboxes.forEach(box => {
+            if (box.checked) {
+                deleteTask(box, activeList)
+            }
+        })
+    })
+}
+
+
+function deleteTask(element, activeList) {
+    // element is the Dom element that triggered the event listener calling this function
+    removeTaskFromUI(element.parentElement)
+    activeList.deleteTask(element.id)
+    saveListToStorage(activeList)
+    updateAllTaskID(activeList)
+    saveListToStorage(activeList)
 }

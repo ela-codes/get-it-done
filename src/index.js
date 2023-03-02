@@ -1,8 +1,7 @@
-import { Task } from './task.js';
 import { List } from './list.js';
 import { saveListToStorage, getStoredItems } from './storage.js';
 import { getTodaysDate, loadOldTasks } from './userInterface.js';
-import { addBtnListener, applyListenersOnLoad } from './eventListener.js';
+import { addBtnListener, applyListenersOnLoad, deleteCompleted } from './eventListener.js';
 
 
 // GLOBAL VARIABLES
@@ -17,6 +16,7 @@ window.onload = () => {
 
     if (localStorage.length > 0) {
         buildContentOnLoad()
+        deleteCompleted()
     } else {
         saveListToStorage(activeList)
     }
