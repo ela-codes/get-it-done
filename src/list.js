@@ -4,10 +4,6 @@ export class List {
         this.tasks = [];
     }
 
-    totalLength() {
-        return this.tasks.length
-    }
-
     get listName() {
         return this.name
     }
@@ -30,6 +26,20 @@ export class List {
 
     set listName(newName) {
         this.name = newName
+    }
+
+    latestTask() {
+        return this.tasks[this.totalLength() -1]
+    }
+
+    totalLength() {
+        return this.tasks.length
+    }
+
+    deleteTask(index) {
+        this.tasks.splice(index, 1)
+        console.group(`Successfully deleted from class array. New task list: `)
+        console.dir(this.allTasks)
     }
 
 }

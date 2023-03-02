@@ -27,6 +27,10 @@ export class Task {
     get displayedStatus() {
         return this.displayed;
     }
+    
+    get currID() {
+        return this.id;
+    }
 
     //SETTERS
     set currTitle(newTitle) {
@@ -48,5 +52,10 @@ export class Task {
     set displayedStatus(newDisplayStatus) {
         this.displayed = newDisplayStatus
     }
+
+    set currID(newID) {
+        this.id = newID
+    }
+    
 }
 

@@ -82,7 +82,7 @@ header > h1 {
 .list-content {
     background-color: var(--navy-bg);
     border-radius: var(--main-border);
-    padding: 20px;
+    padding: 20px 40px;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -97,7 +97,7 @@ header > h1 {
 
 .checklist div {
     display: grid;
-    grid-template-columns: 40px 1fr 80px;
+    grid-template-columns: 40px 1fr 80px 30px;
     align-items: center;
 }
 
@@ -108,8 +108,8 @@ input[type=checkbox] {
 
 input[type=date] {
     height: min-content;
-    background-color: var(--navy-bg);
-    color: var(--off-white);
+    background-color: inherit;
+    color: inherit;
     border: 0;
     padding: 0;   
 }
@@ -118,8 +118,23 @@ input[type=date] {
     color: var(--lightgray);
     font-size: 12px;
     display: grid;
+    justify-self: center;
+}
+
+.delete-task {
+    padding: 0;
+    color: var(--lightgray);
+    background-color: inherit;
+    border: none;
+    display: grid;
     justify-self: end;
 }
+
+.delete-task:hover {
+    font-weight: 800;
+}
+
+/* TASK INPUT UNDER LIST CONTENT */
 
 .new-task-form {
     display: grid;

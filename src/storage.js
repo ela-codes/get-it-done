@@ -67,11 +67,13 @@ export function getStoredItems(listName) {
 
 
 export function generateTaskID(listName) { 
-    if (localStorage.length === 0) { 
+    const length = JSON.parse(localStorage.getItem((listName))).tasks.length
+
+    if (length === 0) { 
         return 0
     } else {
-        const listLength = retrieveList(listName).totalLength()
-        return listLength
+        const id = retrieveList(listName).totalLength() // using length of list as ID
+        return id
     }
 }
 

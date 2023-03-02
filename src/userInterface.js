@@ -9,22 +9,28 @@ function showNewTask(currTask) {
     
     const createNewTaskLine = () => {
         const div = document.createElement('div');
+        div.setAttribute('class', currTask.currID)
         const input = document.createElement('input');
         input.setAttribute('type', 'checkbox');
         input.setAttribute('class', 'active-cb');
         input.setAttribute('value', currTask.currTitle);
-        input.setAttribute('id', currTask.getID());
-        input.checked = currTask.currStatus
+        input.setAttribute('id', currTask.currID);
+        input.checked = currTask.currStatus;
 
         const label = document.createElement('label');
-        label.setAttribute('for', currTask.getID());
+        label.setAttribute('for', currTask.currID);
         label.innerHTML = currTask.currTitle
 
         const span = document.createElement('span');
         span.setAttribute('class', 'due-date');
         span.innerHTML = currTask.currDueDate;
 
-        div.append(input, label, span);
+        const delBtn = document.createElement('button');
+        delBtn.setAttribute('class', 'delete-task');
+        delBtn.setAttribute('id', currTask.currID);
+        delBtn.innerHTML = 'X';
+
+        div.append(input, label, span, delBtn);
         return div
     }
 
@@ -50,4 +56,9 @@ export function loadOldTasks(list) {
 
 export function updateTaskDisplayStatus(task) {
     task.displayedStatus = task.displayedStatus? false : true ;
+}
+
+
+export function removeTaskFromUI(div) {
+    div.remove()
 }
