@@ -1,3 +1,5 @@
+import { generateTaskID } from './storage.js';
+
 export class Task {
     constructor(title, dueDate, status, id, displayed) {
         this.title = title;
@@ -7,10 +9,19 @@ export class Task {
         this.displayed = displayed;
     }
 
-    getID() {
-        return this.id
+    static createNew(activeList) {
+        const taskInput = document.querySelector('input[name="new-task"]')
+        const dateInput = document.querySelector('input[name="new-date"]')
+        const currTask = new Task(
+            taskInput.value, 
+            dateInput.value,
+            false,
+            generateTaskID(activeList.listName),
+            false
+        )
+        return currTask
     }
-    
+
     // GETTERS
     get currTitle() {
         return this.title
@@ -59,3 +70,14 @@ export class Task {
     
 }
 
+
+export function updateAllTaskID(list) {
+    let idCount = 0;
+
+    while (idCount < list.totalLength()) {
+        for (let task of list.allTasks) {
+            task.currID = idCount
+            idCount ++
+        }
+    }
+}

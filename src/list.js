@@ -28,6 +28,7 @@ export class List {
         this.name = newName
     }
 
+
     latestTask() {
         return this.tasks[this.totalLength() -1]
     }
