@@ -130,7 +130,8 @@ input[type=date] {
     justify-self: end;
 }
 
-.delete-task:hover {
+.delete-task:hover,
+.exit:hover {
     font-weight: 800;
 }
 
@@ -171,6 +172,67 @@ input[type=text]:hover{
     padding-left: 10px;
 }
 
+/* MODAL */
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1; 
+    padding-top: 40vh;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(28, 28, 29, 0.9)
+    
+}
+
+.modal {
+    display: none;
+}
+
+.modal-content {
+    border-radius: var(--main-border);
+    width: 350px;
+    height: 250px;
+    padding: 0px 20px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--dark-bg);
+}
+
+.modal-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    grid-auto-flow: column;
+
+}
+
+.modal-header > h3 {
+    grid-column: 2 / 3;
+    justify-self: center;
+}
+
+.exit {
+    grid-column: 3 / 4;
+    justify-self: end;
+    padding-right: 20px;
+}
+
+.exit:hover {
+    cursor: pointer;
+    background-color: none;
+}
+
+input[name="new-list"] {
+    font-size: 15px;
+    width: 15rem;
+    text-align: center;
+}
+
 /* FOOTER */
 a {
     color: var(--lightgray);
@@ -188,15 +250,11 @@ button {
     background-color: black;
     color: var(--off-white);
     border-radius: var(--main-border);
+    border: none;
     padding: 5px 10px;
 }
 
-button:hover {
+button:hover{
     cursor: pointer;
     background-color: var(--navy-bg);
-    border: 0px;
-}
-
-button:focus {
-    border: 0px;
 }
