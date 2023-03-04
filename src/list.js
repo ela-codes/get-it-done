@@ -4,6 +4,16 @@ export class List {
         this.tasks = [];
     }
 
+    static createNew(listName) {
+        const newList = new List(listName)
+        return newList
+    }
+
+    static createDefault() {
+        const defaultList = new List('Default');
+        return defaultList
+    }
+
     get listName() {
         return this.name
     }
@@ -39,10 +49,9 @@ export class List {
 
     deleteTask(index) {
         this.tasks.splice(index, 1)
-        console.group(`Successfully deleted from class array. New task list: `)
+        console.log(`Successfully deleted from class array. New task list: `)
         console.dir(this.allTasks)
     }
-
 }
 
 

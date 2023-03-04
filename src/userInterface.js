@@ -38,7 +38,7 @@ function showNewTask(currTask) {
     listOnScreen.append(createNewTaskLine());
 
 }
-
+ 
 export function loadNewTasks(list) {
     for (let task of list.allTasks) {
         if (task.displayedStatus === false) {
@@ -61,4 +61,49 @@ export function updateTaskDisplayStatus(task) {
 
 export function removeTaskFromUI(div) {
     div.remove()
+}
+
+export function showList(listName) {
+    
+    function createList(listName) {
+        const div = document.createElement('div');
+        div.setAttribute('class', listName)
+        div.classList.add('checklist');
+        div.style.display = 'none';
+        return div
+    }
+
+    function toggleVisibility(div) {
+        if (div.style.display === 'none') {
+            div.style.display = 'grid';
+            div.classList.add('active')
+        } else {
+            div.style.display = 'none'
+            div.classList.remove('active')
+        }
+    }
+
+    function updateListHeader() {
+        const span = document.querySelector('.span-list-name');
+        span.innerHTML = `${listName}'s`
+    }
+
+
+    const currDiv = document.querySelector('.checklist.active');
+    toggleVisibility(currDiv)
+    
+    updateListHeader()
+    const content = document.querySelector('.content-top');
+    const newDiv = createList(listName)
+    content.appendChild(newDiv)
+    toggleVisibility(newDiv)
+    
+    
+
+}
+
+
+export function toggleModal() {
+    const modal = document.querySelector('.modal')
+    modal.style.display = modal.style.display == 'none' ? 'block' : 'none';
 }

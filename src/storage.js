@@ -45,24 +45,21 @@ export function retrieveList(listName) {
 }
 
 
-export function getStoredItems(listName) {
-
-    function recreateTasks(currList) {
-        const list = currList
-        for (let i = 0; i < list.totalLength() ; i++ ) {
-            const newTask = new Task(
-                list.allTasks[i].title,
-                list.allTasks[i].dueDate,
-                list.allTasks[i].status,
-                list.allTasks[i].id,
-                list.allTasks[i].displayed
-            )
-            Object.assign(newTask, list.allTasks[i])
-            list.allTasks[i] = newTask
-        } return list
-    }
-    const recreatedList = recreateTasks(retrieveList(listName))
-    return recreatedList
+export function getStoredItems(currList) {
+    const list = currList
+    for (let i = 0; i < list.totalLength() ; i++ ) {
+        const newTask = new Task(
+            list.allTasks[i].title,
+            list.allTasks[i].dueDate,
+            list.allTasks[i].status,
+            list.allTasks[i].id,
+            list.allTasks[i].displayed
+        )
+        Object.assign(newTask, list.allTasks[i])
+        list.allTasks[i] = newTask
+    } 
+    
+    return list
 }
 
 
