@@ -23,7 +23,7 @@ export class List {
     }
 
     static createDefault() {
-        const defaultList = new List('Default');
+        const defaultList = new List('Today');
         return defaultList
     }
 

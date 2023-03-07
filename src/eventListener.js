@@ -1,7 +1,6 @@
-import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList } from './userInterface.js';
+import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList, addToSidebar } from './userInterface.js';
 import { saveListToStorage, getStoredItems, retrieveList } from './storage.js';
 import { Task, updateAllTaskID } from './task.js';
-import { defaultList } from './index.js';
 import { List } from './list.js'
 
 export function onWindowLoad() {
@@ -9,9 +8,10 @@ export function onWindowLoad() {
         if (localStorage.length > 0) {
             buildContentOnLoad()
         } else {
+            let defaultList = List.createDefault()
+            console.log(`Created default list: ${defaultList}`)
             saveListToStorage(defaultList)
-            addBtnListener(defaultList)
-            applyListenersOnLoad(defaultList)
+            buildContentOnLoad()
         }
         getTodaysDate()
         
@@ -19,15 +19,18 @@ export function onWindowLoad() {
 }
 
 function buildContentOnLoad() {
-    // always load up default list
-    // might need to fix so it loads last active list
-    const storedList = getStoredItems(retrieveList('Default')) 
-    loadOldTasks(storedList)
-    addBtnListener(storedList)
-    applyListenersOnLoad(storedList)
+    const storedLists = Object.keys(localStorage)
+    for (let listName of storedLists) {
+        const currList = getStoredItems(retrieveList(listName)) 
+        showList(currList.listName)
+        loadOldTasks(currList)
+        addToSidebar(currList.listName, currList.getProperName())
+        applyListenersOnLoad(currList)
+        refreshAddBtnListener()
+        addBtnListener(currList)
+    }
+    
 }
-
-
 
 function addBtnListener(activeList) {
     const addBtn = document.querySelector('button.add')
@@ -91,7 +94,8 @@ function applyListenersOnLoad(activeList) {
                 
                 saveListToStorage(newList)
                 toggleModal()
-                showList(newList.listName, newList.getProperName())
+                showList(newList.listName)
+                addToSidebar(newList.listName, newList.getProperName())
                 refreshAddBtnListener()
                 addBtnListener(newList)
             }
@@ -121,7 +125,12 @@ function applyListenersOnLoad(activeList) {
     deleteCompletedListener()
 }
 
+function addDefaultList() {
+    saveListToStorage(newList)
 
+    addBtnListener(newList)
+
+}
 function applyListenerOnNewTask(activeList) {
 
     function newCheckBoxListener(taskID) {
