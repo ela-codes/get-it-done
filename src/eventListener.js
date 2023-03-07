@@ -32,7 +32,7 @@ function buildContentOnLoad() {
 function addBtnListener(activeList) {
     const addBtn = document.querySelector('button.add')
 
-    addBtn.addEventListener("click", () => {
+    addBtn.addEventListener('click', () => {
         activeList.addTask = Task.createNew(activeList)
         saveListToStorage(activeList)
         loadNewTasks(getStoredItems(retrieveList(activeList.listName)))
@@ -44,8 +44,17 @@ function addBtnListener(activeList) {
     })
 }
 
+function refreshAddBtnListener() {
+    // refresh event listener on add-task button
+    const addBtn = document.querySelector('button.add')
+    const newaddBtn = addBtn.cloneNode(true)
+    addBtn.parentNode.insertBefore(newaddBtn, addBtn)
+    addBtn.parentNode.removeChild(addBtn)
+}
 
 function applyListenersOnLoad(activeList) {
+
+    console.log(activeList)
 
     function checkBoxListener() {
         const checkBoxes = document.querySelectorAll('.active-cb')
@@ -78,24 +87,24 @@ function applyListenersOnLoad(activeList) {
             exit.onclick = () => toggleModal()
 
             confirm.onclick = () => {
-                console.log(JSON.stringify(activeList))
                 const newList = List.createNew(input.value)
                 
                 saveListToStorage(newList)
                 toggleModal()
-                showList(newList.name)
+                showList(newList.listName, newList.getProperName())
+                refreshAddBtnListener()
+                addBtnListener(newList)
             }
         })
     }
 
 
-
-    function deleteCompletedListener(activeList) {
+    function deleteCompletedListener() {
         const btn = document.querySelector('.delete-completed')
         btn.addEventListener('click', () => {
             // check if there are any boxes checked
             // if yes, delete tasks from list and UI
-            // if no, consider the button pointless. maybe play an 'cleaned' animation?
+            // if no, consider the button pointless. maybe play a 'cleaned' animation?
             const checkboxes = document.querySelectorAll('.active-cb')
             console.log(checkboxes)
             checkboxes.forEach(box => {
@@ -142,6 +151,7 @@ function applyListenerOnNewTask(activeList) {
 function deleteTask(element, activeList) {
     // element is the Dom element that triggered the event listener calling this function
     removeTaskFromUI(element.parentElement)
+    console.log(element, activeList)
     activeList.deleteTask(element.id)
     saveListToStorage(activeList)
     updateAllTaskID(activeList)

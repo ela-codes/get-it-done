@@ -1,12 +1,25 @@
 export class List {
     constructor(name) {
         this.name = name;
+        this.properName = List.removeWhitespace(this.name)
         this.tasks = [];
     }
 
     static createNew(listName) {
         const newList = new List(listName)
         return newList
+    }
+
+    static removeWhitespace(listName) {
+        let properName = ""
+        for (let char of listName) {
+            if (char !== " ") {
+                properName += char
+            } else {
+                properName += '-'
+            }
+        }
+        return properName
     }
 
     static createDefault() {
@@ -17,6 +30,7 @@ export class List {
     get listName() {
         return this.name
     }
+
     get allTasks() {
         return this.tasks
     }
@@ -52,6 +66,8 @@ export class List {
         console.log(`Successfully deleted from class array. New task list: `)
         console.dir(this.allTasks)
     }
+
+    getProperName() {
+        return this.properName;
+    }
 }
-
-

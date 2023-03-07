@@ -63,7 +63,7 @@ export function removeTaskFromUI(div) {
     div.remove()
 }
 
-export function showList(listName) {
+export function showList(listName, properName) {
     
     function createList(listName) {
         const div = document.createElement('div');
@@ -84,10 +84,20 @@ export function showList(listName) {
     }
 
     function updateListHeader() {
-        const span = document.querySelector('.span-list-name');
-        span.innerHTML = `${listName}'s`
+        const title = document.querySelector('.list-title');
+        title.innerHTML = listName
     }
 
+    function addToSidebar() {
+        const sidebar = document.querySelector('.sidebar-lists');
+        const list = document.createElement('div')
+        list.setAttribute('class', 'sidebar-item');
+        list.classList.add(properName)
+        list.innerHTML = listName
+        sidebar.append(list)
+        console.log(sidebar, list)
+    }
+    
 
     const currDiv = document.querySelector('.checklist.active');
     toggleVisibility(currDiv)
@@ -98,7 +108,7 @@ export function showList(listName) {
     content.appendChild(newDiv)
     toggleVisibility(newDiv)
     
-    
+    addToSidebar()
 
 }
 
