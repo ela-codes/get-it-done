@@ -27,11 +27,11 @@ body {
 .container {
     border-radius: var(--main-border);
     background-color: var(--dark-bg);
-    padding: 2rem 6rem;
-    width: clamp(600px, 70vw, 70vw);
-    height: clamp(600px, 60vh, 70vh);
+    padding: 2rem 5rem;
+    width: clamp(800px, 50vw, 70vw);
+    height: clamp(660px, 40vh, 70vh);
     display: grid;
-    grid-template: 80px 1fr 80px / 80% 20%;
+    grid-template: 80px 1fr 80px / 75% 25%;
 }
 
 /* .container div {
@@ -162,14 +162,29 @@ input[type=text]:hover{
     padding-top: 30px;
 }
 
+.sidebar-title {
+    padding-bottom: 10px;
+}
+
 .sidebar-lists {
     min-height: 7rem;
     border-left: 1px solid white;
     padding-left: 10px;
+
 }
 
 .sidebar-item {
     padding-left: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.sidebar-item:hover {
+    background-color: var(--navy-bg);
+}
+
+.add-list {
+    margin-top: 20px;
 }
 
 /* MODAL */
@@ -230,7 +245,12 @@ input[type=text]:hover{
 input[name="new-list"] {
     font-size: 15px;
     width: 15rem;
+    height: 2rem;
     text-align: center;
+}
+
+input::placeholder {
+    opacity: 0.4;
 }
 
 /* FOOTER */
@@ -251,7 +271,7 @@ button {
     color: var(--off-white);
     border-radius: var(--main-border);
     border: none;
-    padding: 5px 10px;
+    padding: 7px 18px;
 }
 
 button:hover{
