@@ -1,7 +1,7 @@
-import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList, addToSidebar } from './userInterface.js';
-import { saveListToStorage, getStoredItems, retrieveList } from './storage.js';
+import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList, addToSidebar, toggleListDisplay, updateListHeader } from './userInterface.js';
+import { saveListToStorage, getStoredItems, retrieveList, findListInStorage } from './storage.js';
 import { Task, updateAllTaskID } from './task.js';
-import { List } from './list.js'
+import { List, getNewList } from './list.js'
 
 export function onWindowLoad() {
     window.onload = () => {        
@@ -14,7 +14,6 @@ export function onWindowLoad() {
             buildContentOnLoad()
         }
         getTodaysDate()
-        
     }
 }
 
@@ -22,42 +21,36 @@ function buildContentOnLoad() {
     const storedLists = Object.keys(localStorage)
     for (let listName of storedLists) {
         const currList = getStoredItems(retrieveList(listName)) 
-        showList(currList.listName)
+        showList(currList.listName, currList.properListName)
         loadOldTasks(currList)
-        addToSidebar(currList.listName, currList.getProperName())
-        applyListenersOnLoad(currList)
-        refreshAddBtnListener()
-        addBtnListener(currList)
-    }
-    
+        addToSidebar(currList.listName, currList.properListName)
+        applyEventListeners(currList)
+        addBtnListener()
+    } 
 }
 
-function addBtnListener(activeList) {
+function addBtnListener() {
     const addBtn = document.querySelector('button.add')
 
-    addBtn.addEventListener('click', () => {
-        activeList.addTask = Task.createNew(activeList)
-        saveListToStorage(activeList)
-        loadNewTasks(getStoredItems(retrieveList(activeList.listName)))
-        updateTaskDisplayStatus(activeList.latestTask())
-        saveListToStorage(activeList)
-        applyListenerOnNewTask(activeList)
-
-        console.log(activeList)
-    })
-}
-
-function refreshAddBtnListener() {
     // refresh event listener on add-task button
-    const addBtn = document.querySelector('button.add')
     const newaddBtn = addBtn.cloneNode(true)
     addBtn.parentNode.insertBefore(newaddBtn, addBtn)
     addBtn.parentNode.removeChild(addBtn)
+
+    const activeList = retrieveList(document.querySelector('.checklist.active').classList[0])
+
+    newaddBtn.addEventListener('click', () => {
+        activeList.addTask = Task.createNew(activeList)
+        saveListToStorage(activeList)
+        loadNewTasks(getStoredItems(retrieveList(activeList.properListName)))
+        updateTaskDisplayStatus(activeList.latestTask())
+        saveListToStorage(activeList)
+        applyListenerOnNewTask(activeList)
+    })
 }
 
-function applyListenersOnLoad(activeList) {
 
-    console.log(activeList)
+function applyEventListeners(activeList) {
 
     function checkBoxListener() {
         const checkBoxes = document.querySelectorAll('.active-cb')
@@ -79,7 +72,7 @@ function applyListenersOnLoad(activeList) {
     }
 
     function newListListener() {
-        const addListBtn = document.querySelector('.add-list');
+        let addListBtn = document.querySelector('.add-list');
         const confirm = document.querySelector('.confirm-name');
         const input = document.querySelector('input[name="new-list"]')
         const exit = document.querySelector('.exit');
@@ -90,18 +83,17 @@ function applyListenersOnLoad(activeList) {
             exit.onclick = () => toggleModal()
 
             confirm.onclick = () => {
-                const newList = List.createNew(input.value)
-                
+                const newList = getNewList(input.value)
+                console.log(newList)
                 saveListToStorage(newList)
                 toggleModal()
-                showList(newList.listName)
-                addToSidebar(newList.listName, newList.getProperName())
-                refreshAddBtnListener()
-                addBtnListener(newList)
+                showList(newList.listName, newList.properListName)
+                addToSidebar(newList.listName, newList.properListName)
+                addBtnListener()
+                addListBtn = document.querySelector('.add-list');
             }
         })
     }
-
 
     function deleteCompletedListener() {
         const btn = document.querySelector('.delete-completed')
@@ -119,18 +111,32 @@ function applyListenersOnLoad(activeList) {
         })
     }
 
+    function switchLists() {
+        let currList = document.querySelector('.checklist.active')
+        const sidebarLists = document.querySelectorAll('.sidebar-item');
+        
+        sidebarLists.forEach(list => list.addEventListener('click', () => {
+            const clickedItem = list.classList[1]
+
+            if (currList.classList[0] !== clickedItem) {
+                const newList = document.querySelector(`.${clickedItem}`)
+                toggleListDisplay(currList)
+                toggleListDisplay(newList)
+                updateListHeader(list.innerText)
+                currList = document.querySelector('.checklist.active')
+                addBtnListener()
+            }
+        }))
+    }
+
     checkBoxListener()
     deleteBtnListener()
     newListListener()
     deleteCompletedListener()
+    switchLists()
 }
 
-function addDefaultList() {
-    saveListToStorage(newList)
 
-    addBtnListener(newList)
-
-}
 function applyListenerOnNewTask(activeList) {
 
     function newCheckBoxListener(taskID) {
@@ -152,8 +158,6 @@ function applyListenerOnNewTask(activeList) {
     newCheckBoxListener(activeList.latestTask().currID)
     newDeleteBtnListener(activeList.latestTask().currID)
 }
-
-
 
 
 

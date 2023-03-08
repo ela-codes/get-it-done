@@ -16,7 +16,7 @@ export class Task {
             taskInput.value, 
             dateInput.value,
             false,
-            generateTaskID(activeList.listName),
+            generateTaskID(activeList.properListName),
             false
         )
         return currTask

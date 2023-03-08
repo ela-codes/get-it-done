@@ -63,44 +63,42 @@ export function removeTaskFromUI(div) {
     div.remove()
 }
 
-export function showList(listName) {
+export function showList(listName, properName) {
     
-    function createList(listName) {
+    function createList() {
         const div = document.createElement('div');
-        div.setAttribute('class', listName)
+        div.setAttribute('class', properName)
         div.classList.add('checklist');
         div.style.display = 'none';
         return div
     }
 
-    function toggleVisibility(div) {
-        if (div.style.display === 'none') {
-            div.style.display = 'grid';
-            div.classList.add('active')
-        } else {
-            div.style.display = 'none'
-            div.classList.remove('active')
-        }
-    }
-
-    function updateListHeader() {
-        const title = document.querySelector('.list-title');
-        title.innerHTML = listName
-    }
-
-    updateListHeader()
-
+    updateListHeader(listName)
     
-    const currDiv = document.querySelector('.checklist.active');
-
-    if (currDiv !== null) {toggleVisibility(currDiv)}
-    
+    const currDiv = document.querySelector('.checklist.active'); // on reload, this div doesnt exist
+    if (currDiv !== null) {toggleListDisplay(currDiv)} 
     
     const content = document.querySelector('.content-top');
     const newDiv = createList(listName)
     content.appendChild(newDiv)
-    toggleVisibility(newDiv)
+    toggleListDisplay(newDiv)
     
+}
+
+
+export function toggleListDisplay(div) {
+    if (div.style.display === 'none') {
+        div.style.display = 'grid';
+        div.classList.add('active')
+    } else {
+        div.style.display = 'none'
+        div.classList.remove('active')
+    }
+}
+
+export function updateListHeader(listName) {
+    const title = document.querySelector('.list-title');
+    title.innerHTML = listName
 }
 
 export function addToSidebar(listName, properName) {
@@ -110,7 +108,6 @@ export function addToSidebar(listName, properName) {
     list.classList.add(properName)
     list.innerHTML = listName
     sidebar.append(list)
-    console.log(sidebar, list)
 }
 
 
@@ -118,3 +115,4 @@ export function toggleModal() {
     const modal = document.querySelector('.modal')
     modal.style.display = modal.style.display == 'none' ? 'block' : 'none';
 }
+

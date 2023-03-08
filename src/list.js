@@ -1,7 +1,7 @@
 export class List {
     constructor(name) {
         this.name = name;
-        this.properName = List.removeWhitespace(this.name)
+        this.properName = ""
         this.tasks = [];
     }
 
@@ -10,20 +10,10 @@ export class List {
         return newList
     }
 
-    static removeWhitespace(listName) {
-        let properName = ""
-        for (let char of listName) {
-            if (char !== " ") {
-                properName += char
-            } else {
-                properName += '-'
-            }
-        }
-        return properName
-    }
-
     static createDefault() {
         const defaultList = new List('Today');
+        defaultList.properListName = 'Today'
+        console.log(defaultList)
         return defaultList
     }
 
@@ -33,6 +23,10 @@ export class List {
 
     get allTasks() {
         return this.tasks
+    }
+
+    get properListName() {
+        return this.properName
     }
 
     /**
@@ -52,6 +46,10 @@ export class List {
         this.name = newName
     }
 
+    set properListName(newName) {
+        this.properName = newName
+    }
+
 
     latestTask() {
         return this.tasks[this.totalLength() -1]
@@ -66,8 +64,18 @@ export class List {
         console.log(`Successfully deleted from class array. New task list: `)
         console.dir(this.allTasks)
     }
+}
 
-    getProperName() {
-        return this.properName;
+export function getNewList(name) {
+    const newList = List.createNew(name)
+
+    function removeWhitespace(name) {
+        let properName = ""
+        for (let char of name) {
+            properName += (char !== " ") ? char : '-'
+        } 
+        return properName
     }
+    newList.properListName = removeWhitespace(name)
+    return newList
 }

@@ -30,7 +30,8 @@ function storageAvailable(type) {
 
 export function saveListToStorage(listObj) {
     if (storageAvailable('localStorage')){
-        localStorage.setItem(listObj.listName, JSON.stringify(listObj))
+        localStorage.setItem(listObj.properListName, JSON.stringify(listObj))
+        console.log(`Saved ${listObj.properListName} to storage`)
     } else {
         console.warn('Storage not available')
     }
@@ -39,7 +40,7 @@ export function saveListToStorage(listObj) {
 
 export function retrieveList(listName) {
     const storedList = JSON.parse(localStorage.getItem(listName))
-    const newList = new List(storedList.name, storedList.tasks)
+    const newList = List.createNew(storedList.properName)
     Object.assign(newList, storedList)
     return newList
 }
@@ -75,8 +76,3 @@ export function generateTaskID(listName) {
 }
 
 
-function findTaskinStorage(listName, id) {
-    const list = getStoredItems(listName)
-    const foundTask = list.allTasks.find(item => item.id === id)
-    return foundTask
-}
