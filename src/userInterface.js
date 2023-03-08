@@ -116,3 +116,7 @@ export function toggleModal() {
     modal.style.display = modal.style.display == 'none' ? 'block' : 'none';
 }
 
+export function clearInputField(parentNode) {
+    const input = parentNode.querySelector('input[type="text"]')
+    input.value = ''
+}

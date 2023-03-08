@@ -1,5 +1,5 @@
-import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList, addToSidebar, toggleListDisplay, updateListHeader } from './userInterface.js';
-import { saveListToStorage, getStoredItems, retrieveList, findListInStorage } from './storage.js';
+import { getTodaysDate, loadOldTasks, loadNewTasks, updateTaskDisplayStatus, removeTaskFromUI, toggleModal, showList, addToSidebar, toggleListDisplay, updateListHeader, clearInputField } from './userInterface.js';
+import { saveListToStorage, getStoredItems, retrieveList } from './storage.js';
 import { Task, updateAllTaskID } from './task.js';
 import { List, getNewList } from './list.js'
 
@@ -46,6 +46,7 @@ function addBtnListener() {
         updateTaskDisplayStatus(activeList.latestTask())
         saveListToStorage(activeList)
         applyListenerOnNewTask(activeList)
+        clearInputField(newaddBtn.parentNode)
     })
 }
 
@@ -84,12 +85,12 @@ function applyEventListeners(activeList) {
 
             confirm.onclick = () => {
                 const newList = getNewList(input.value)
-                console.log(newList)
                 saveListToStorage(newList)
                 toggleModal()
                 showList(newList.listName, newList.properListName)
                 addToSidebar(newList.listName, newList.properListName)
                 addBtnListener()
+                clearInputField(confirm.parentNode)
                 addListBtn = document.querySelector('.add-list');
             }
         })
@@ -102,7 +103,6 @@ function applyEventListeners(activeList) {
             // if yes, delete tasks from list and UI
             // if no, consider the button pointless. maybe play a 'cleaned' animation?
             const checkboxes = document.querySelectorAll('.active-cb')
-            console.log(checkboxes)
             checkboxes.forEach(box => {
                 if (box.checked) {
                     deleteTask(box, activeList)
