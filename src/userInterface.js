@@ -59,7 +59,7 @@ export function updateTaskDisplayStatus(task) {
 }
 
 
-export function removeTaskFromUI(div) {
+export function removeFromUI(div) {
     div.remove()
 }
 
@@ -82,6 +82,7 @@ export function showList(listName, properName) {
     const newDiv = createList(listName)
     content.appendChild(newDiv)
     toggleListDisplay(newDiv)
+
     
 }
 
@@ -101,6 +102,17 @@ export function updateListHeader(listName) {
     title.innerHTML = listName
 }
 
+
+export function toggleDeleteListBtnDisplay(listName) {
+    const btn = document.querySelector('.delete-list');
+    if (listName !== 'Today') {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
+    }
+}
+
+
 export function addToSidebar(listName, properName) {
     const sidebar = document.querySelector('.sidebar-lists');
     const list = document.createElement('div')
@@ -119,4 +131,18 @@ export function toggleModal() {
 export function clearInputField(parentNode) {
     const input = parentNode.querySelector('input[type="text"]')
     input.value = ''
+}
+
+
+export function updateElementTaskID(activeListElement, totalTasks) {
+    let num = 0;
+    while (num < totalTasks) {
+        for (const div of activeListElement.childNodes) {
+            div.setAttribute('class', num)
+            div.querySelector('input').setAttribute('id', num)
+            div.querySelector('label').setAttribute('for', num)
+            div.querySelector('button').setAttribute('id', num)
+            num++
+        }
+    }
 }

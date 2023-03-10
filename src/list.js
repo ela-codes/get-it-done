@@ -60,9 +60,12 @@ export class List {
     }
 
     deleteTask(index) {
-        this.tasks.splice(index, 1)
-        console.log(`Successfully deleted from class array. New task list: `)
-        console.dir(this.allTasks)
+        this.tasks[index] = null
+    }
+
+    updateListAfterTaskRemoval() {
+        const newList = this.tasks.filter(task => task !== null)
+        this.tasks = newList
     }
 }
 

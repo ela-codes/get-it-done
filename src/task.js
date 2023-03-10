@@ -67,17 +67,13 @@ export class Task {
     set currID(newID) {
         this.id = newID
     }
-    
 }
 
 
 export function updateAllTaskID(list) {
-    let idCount = 0;
-
-    while (idCount < list.totalLength()) {
-        for (let task of list.allTasks) {
-            task.currID = idCount
-            idCount ++
-        }
+    console.log(list.length)
+    for (let i = 0 ; i < list.length ; i++) {
+        console.log(list[i])
+        list[i].id = i
     }
 }

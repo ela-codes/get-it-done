@@ -76,3 +76,7 @@ export function generateTaskID(listName) {
 }
 
 
+export function removeStoredList(listName) {
+    localStorage.removeItem(listName)
+
+}

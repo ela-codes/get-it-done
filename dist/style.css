@@ -135,6 +135,15 @@ input[type=date] {
     font-weight: 800;
 }
 
+.list-btns {
+    display: flex;
+    column-gap: 10px;
+}
+
+.delete-list {
+    display: none;
+}
+
 /* TASK INPUT UNDER LIST CONTENT */
 
 .new-task-form {
