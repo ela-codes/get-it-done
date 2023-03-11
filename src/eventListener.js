@@ -18,7 +18,13 @@ export function onWindowLoad() {
 
 function buildContentOnLoad() {
     const storedLists = Object.keys(localStorage)
+    contentBuilder('Today') // load default list first
+
     for (let listName of storedLists) {
+        if (listName !== 'Today') {contentBuilder(listName)} // load the rest 
+    }
+
+    function contentBuilder(listName) {
         const currList = getStoredItems(retrieveList(listName)) 
         showList(currList.listName, currList.properListName)
         loadOldTasks(currList)
@@ -26,7 +32,7 @@ function buildContentOnLoad() {
         applyEventListeners(currList)
         addBtnListener()
         toggleDeleteListBtnDisplay(currList.properListName)
-    } 
+    }
 }
 
 
