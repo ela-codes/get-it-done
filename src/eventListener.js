@@ -54,7 +54,7 @@ function addBtnListener() {
 
 
 function applyEventListeners() {
-    const listDOMElement = document.querySelector('.checklist.active')
+    let listDOMElement = document.querySelector('.checklist.active')
     let activeList =  getStoredItems(retrieveList(listDOMElement.classList[0]))
 
 
@@ -62,6 +62,7 @@ function applyEventListeners() {
         const checkBoxes = document.querySelectorAll('.active-cb')
     
         checkBoxes.forEach(box => box.addEventListener('change', () => {
+            activeList =  getStoredItems(retrieveList(listDOMElement.classList[0]))
             activeList.allTasks[box.id].currStatus = box.checked
             saveListToStorage(activeList)
         }))
@@ -125,20 +126,22 @@ function applyEventListeners() {
     }
 
     function switchLists() {
-        let currList = document.querySelector('.checklist.active')
         const sidebarLists = document.querySelectorAll('.sidebar-item');
         
         sidebarLists.forEach(list => list.addEventListener('click', () => {
             const clickedItem = list.classList[1]
+            listDOMElement = document.querySelector('.checklist.active')
+            console.log(clickedItem, listDOMElement.classList[0])
 
-            if (currList.classList[0] !== clickedItem) {
+            if (listDOMElement.classList[0] !== clickedItem) {
                 const newList = document.querySelector(`.${clickedItem}`)
-                toggleListDisplay(currList)
+                toggleListDisplay(listDOMElement)
                 toggleListDisplay(newList)
                 updateListHeader(list.innerText)
-                currList = document.querySelector('.checklist.active')
+                listDOMElement = document.querySelector('.checklist.active')
                 addBtnListener()
-                toggleDeleteListBtnDisplay(currList.classList[0])
+                toggleDeleteListBtnDisplay(listDOMElement.classList[0])
+                applyEventListeners()
             }
         }))
     }
@@ -173,6 +176,7 @@ function applyEventListeners() {
     deleteCompletedListener()
     switchLists()
     deleteNewList()
+    
 }
 
 
