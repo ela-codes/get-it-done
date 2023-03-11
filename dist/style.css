@@ -32,7 +32,7 @@ body {
     width: clamp(800px, 50vw, 70vw);
     height: clamp(660px, 40vh, 70vh);
     display: grid;
-    grid-template: 80px 1fr 80px / 75% 25%;
+    grid-template: 100px 1fr 80px / 75% 25%;
 }
 
 
@@ -308,6 +308,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: end;
+    font-size: 11px;
 }
 
 /* GENERAL ELEMENTS */
