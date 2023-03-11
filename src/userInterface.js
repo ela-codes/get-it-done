@@ -19,11 +19,12 @@ function showNewTask(currTask) {
 
         const label = document.createElement('label');
         label.setAttribute('for', currTask.currID);
+        label.innerHTML = currTask.currTitle
     
-        const labelSpan = document.createElement('span');
-        labelSpan.innerHTML = currTask.currTitle
+        // const labelSpan = document.createElement('span');
+        // labelSpan.innerHTML = currTask.currTitle
 
-        label.appendChild(labelSpan)
+        // label.appendChild(labelSpan)
 
         const span = document.createElement('span');
         span.setAttribute('class', 'due-date');
