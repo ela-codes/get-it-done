@@ -18,7 +18,7 @@ export function onWindowLoad() {
 
 function buildContentOnLoad() {
     const storedLists = Object.keys(localStorage)
-    contentBuilder('Today') // load default list first
+    contentBuilder('Today') // default list first
 
     for (let listName of storedLists) {
         if (listName !== 'Today') {contentBuilder(listName)} // load the rest 
@@ -29,14 +29,112 @@ function buildContentOnLoad() {
         showList(currList.listName, currList.properListName)
         loadOldTasks(currList)
         addToSidebar(currList.listName, currList.properListName)
-        applyEventListeners(currList)
-        addBtnListener()
+
+        addBtnListenerAfterLoad() // for new tasks
+        applyTaskListeners() // for existing tasks retrieved from storage
+
+        newListListenerAfterLoad() // for new list
+        applyListListeners() // for existing lists retrieved from storage
+
         toggleDeleteListBtnDisplay(currList.properListName)
     }
 }
 
 
-function addBtnListener() {
+function newListListenerAfterLoad() {
+    let addListBtn = document.querySelector('.add-list');
+    
+    const newListBtn = addListBtn.cloneNode(true)
+    addListBtn.parentNode.insertBefore(newListBtn, addListBtn)
+    addListBtn.parentNode.removeChild(addListBtn)
+
+    newListBtn.addEventListener('click', () => {
+        toggleModal()
+
+        const confirm = document.querySelector('.confirm-name');
+        const input = document.querySelector('input[name="new-list"]')
+        const exit = document.querySelector('.exit');
+
+        exit.onclick = () => toggleModal()
+
+        confirm.onclick = () => {
+            const newList = getNewList(input.value)
+            saveListToStorage(newList)
+            toggleModal()
+            showList(newList.listName, newList.properListName)
+            addToSidebar(newList.listName, newList.properListName)
+
+            toggleDeleteListBtnDisplay(newList.properListName)
+            clearInputField(confirm.parentNode)
+            addBtnListenerAfterLoad()
+            applyListListeners()
+
+        }
+    })
+}
+ 
+
+function applyListListeners() {
+    // switch list
+    // delete list
+    let listDOMElement = document.querySelector('.checklist.active')
+
+    function switchLists() {
+        const sidebarLists = document.querySelectorAll('.sidebar-item');
+        
+        sidebarLists.forEach(list => list.addEventListener('click', () => {
+            const clickedItem = list.classList[1]
+            listDOMElement = document.querySelector('.checklist.active')
+            console.log(clickedItem, listDOMElement.classList[0])
+
+            if (listDOMElement.classList[0] !== clickedItem) {
+                const newList = document.querySelector(`.${clickedItem}`)
+                toggleListDisplay(listDOMElement)
+                toggleListDisplay(newList)
+                updateListHeader(list.innerText)
+                listDOMElement = document.querySelector('.checklist.active')
+
+                toggleDeleteListBtnDisplay(listDOMElement.classList[0])
+            }
+        }))
+    }
+
+    function deleteNewList() {
+        const btn = document.querySelector('.delete-list')
+        
+        // re-create btn so event is only fired at the current one
+        const newBtn = btn.cloneNode(true)
+        btn.parentNode.insertBefore(newBtn, btn)
+        btn.parentNode.removeChild(btn)
+
+        newBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this list?')) {
+                console.log(listDOMElement.classList[0])
+                
+                let listSidebar = document.querySelector(`.sidebar-item.${listDOMElement.classList[0]}`)
+                listDOMElement = document.querySelector('.checklist.active')
+                removeStoredList(listDOMElement.classList[0])
+                removeFromUI(listDOMElement)
+                removeFromUI(listSidebar)
+
+                const defaultList = document.querySelector('.checklist.Today')
+                toggleListDisplay(defaultList) // go back to default list
+                updateListHeader(defaultList.classList[0]) 
+                toggleDeleteListBtnDisplay(defaultList.classList[0]) 
+            }
+        })
+        
+    }
+    switchLists()
+    deleteNewList()
+    applyTaskListeners()
+    newListListenerAfterLoad()
+}
+
+
+
+function addBtnListenerAfterLoad() {
+    // listen for new task and call delete & checkbox task listeners
     const addBtn = document.querySelector('button.add')
 
     // refresh event listener on add-task button
@@ -44,25 +142,27 @@ function addBtnListener() {
     addBtn.parentNode.insertBefore(newaddBtn, addBtn)
     addBtn.parentNode.removeChild(addBtn)
 
-    const activeList = retrieveList(document.querySelector('.checklist.active').classList[0])
-
     newaddBtn.addEventListener('click', () => {
-        activeList.addTask = Task.createNew(activeList)
-        saveListToStorage(activeList)
-        loadNewTasks(getStoredItems(retrieveList(activeList.properListName)))
-        updateTaskDisplayStatus(activeList.latestTask())
-        saveListToStorage(activeList)
-        // applyListenerOnNewTask()
-        applyEventListeners(activeList)
+        const listDOMElement = document.querySelector('.checklist.active')
+        const currList = retrieveList(listDOMElement.classList[0])
+        currList.addTask = Task.createNew(currList)
+        saveListToStorage(currList)
+        loadNewTasks(getStoredItems(retrieveList(currList.properListName)))
+        updateTaskDisplayStatus(currList.latestTask())
+        saveListToStorage(currList)
         clearInputField(newaddBtn.parentNode)
+        applyTaskListeners()
     })
 }
 
 
-function applyEventListeners() {
+function applyTaskListeners() {
+    // delete one task
+    // check off task
+    // delete all completed tasks
+    
     let listDOMElement = document.querySelector('.checklist.active')
     let activeList =  getStoredItems(retrieveList(listDOMElement.classList[0]))
-
 
     function checkBoxListener() {
         const checkBoxes = document.querySelectorAll('.active-cb')
@@ -87,36 +187,15 @@ function applyEventListeners() {
             })
         )
     }
-
-    function newListListener() {
-        let addListBtn = document.querySelector('.add-list');
-        const confirm = document.querySelector('.confirm-name');
-        const input = document.querySelector('input[name="new-list"]')
-        const exit = document.querySelector('.exit');
-
-        addListBtn.addEventListener('click', () => {
-            toggleModal()
-
-            exit.onclick = () => toggleModal()
-
-            confirm.onclick = () => {
-                const newList = getNewList(input.value)
-                saveListToStorage(newList)
-                toggleModal()
-                showList(newList.listName, newList.properListName)
-                addToSidebar(newList.listName, newList.properListName)
-                addBtnListener()
-                applyEventListeners()
-                toggleDeleteListBtnDisplay(newList.properListName)
-                clearInputField(confirm.parentNode)
-            }
-        })
-    }
-
+    
     function deleteCompletedListener() {
         const btn = document.querySelector('.delete-completed')
+
+        const newBtn = btn.cloneNode(true)
+        btn.parentNode.insertBefore(newBtn, btn)
+        btn.parentNode.removeChild(btn)
         
-        btn.addEventListener('click', () => {
+        newBtn.addEventListener('click', () => {
             activeList = retrieveList(document.querySelector('.checklist.active').classList[0])
             const checkboxes = document.querySelectorAll('.active-cb')
             checkboxes.forEach(box => {
@@ -130,59 +209,9 @@ function applyEventListeners() {
             updateElementTaskID(listDOMElement, activeList.totalLength())
         })
     }
-
-    function switchLists() {
-        const sidebarLists = document.querySelectorAll('.sidebar-item');
-        
-        sidebarLists.forEach(list => list.addEventListener('click', () => {
-            const clickedItem = list.classList[1]
-            listDOMElement = document.querySelector('.checklist.active')
-            console.log(clickedItem, listDOMElement.classList[0])
-
-            if (listDOMElement.classList[0] !== clickedItem) {
-                const newList = document.querySelector(`.${clickedItem}`)
-                toggleListDisplay(listDOMElement)
-                toggleListDisplay(newList)
-                updateListHeader(list.innerText)
-                listDOMElement = document.querySelector('.checklist.active')
-                addBtnListener()
-                toggleDeleteListBtnDisplay(listDOMElement.classList[0])
-                applyEventListeners()
-            }
-        }))
-    }
-
-    function deleteNewList() {
-        const listDiv = document.querySelector('.checklist.active')
-
-        if (listDiv.classList[0] !== 'Today') {
-            const btn = document.querySelector('.delete-list')
-
-            btn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to delete this list?')) {
-                    
-                    const listSidebar = document.querySelector(`.sidebar-item.${listDiv.classList[0]}`)
-
-                    removeStoredList(listDiv.classList[0])
-                    removeFromUI(listDiv)
-                    removeFromUI(listSidebar)
-
-                    const defaultList = document.querySelector('.checklist.Today')
-                    toggleListDisplay(defaultList) // go back to default list
-                    updateListHeader(defaultList.classList[0]) 
-                    toggleDeleteListBtnDisplay(defaultList.classList[0]) 
-                    applyEventListeners()
-                }
-            })
-        }
-    }
     checkBoxListener()
     deleteBtnListener()
-    newListListener()
     deleteCompletedListener()
-    switchLists()
-    deleteNewList()
-    
 }
 
 
@@ -190,5 +219,4 @@ function deleteTaskManager(element, activeList) {
     // element is the Dom element that triggered the event listener calling this function
     activeList.deleteTask(element.id)
     removeFromUI(element.parentElement)
-    
 }
