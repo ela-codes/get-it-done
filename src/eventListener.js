@@ -50,12 +50,12 @@ function newListListenerAfterLoad() {
         //list name is < 2 chars
         //list name already exists
 
-        const invalidChar = "123456789 ".includes(name[0])
-        const empty = name === ""
-        const tooShort = name.length < 2
+        const invalidChar = "123456789 ".includes(name[0]) 
+        const empty = name === "" 
+        const tooShort = name.length < 2 
         const existingNames = Object.keys(localStorage).includes(name)
 
-        return (invalidChar && empty && tooShort && existingNames)
+        return !(invalidChar || empty || tooShort || existingNames)
     }
 
     let addListBtn = document.querySelector('.add-list');
