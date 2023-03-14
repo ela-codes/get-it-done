@@ -42,6 +42,22 @@ function buildContentOnLoad() {
 
 
 function newListListenerAfterLoad() {
+
+    function nameValidator(name) {
+        // check for:
+        //empty list name
+        //list name starts with space or number
+        //list name is < 2 chars
+        //list name already exists
+
+        const invalidChar = "123456789 ".includes(name[0])
+        const empty = name === ""
+        const tooShort = name.length < 2
+        const existingNames = Object.keys(localStorage).includes(name)
+
+        return (invalidChar && empty && tooShort && existingNames)
+    }
+
     let addListBtn = document.querySelector('.add-list');
     
     const newListBtn = addListBtn.cloneNode(true)
@@ -58,21 +74,28 @@ function newListListenerAfterLoad() {
         exit.onclick = () => toggleModal()
 
         confirm.onclick = () => {
-            const newList = getNewList(input.value)
-            saveListToStorage(newList)
-            toggleModal()
-            showList(newList.listName, newList.properListName)
-            addToSidebar(newList.listName, newList.properListName)
+            console.log(input.value.length)
+            if (nameValidator(input.value)) {
+                const newList = getNewList(input.value)
+                saveListToStorage(newList)
+                toggleModal()
+                showList(newList.listName, newList.properListName)
+                addToSidebar(newList.listName, newList.properListName)
 
-            toggleDeleteListBtnDisplay(newList.properListName)
-            clearInputField(confirm.parentNode)
-            addBtnListenerAfterLoad()
-            applyListListeners()
-
+                toggleDeleteListBtnDisplay(newList.properListName)
+                clearInputField(confirm.parentNode)
+                addBtnListenerAfterLoad()
+                applyListListeners()
+            } else {
+                input.value = ""
+                const validatorTxt = document.querySelector('.txt-requirement')
+                validatorTxt.style.color = 'var(--brightpink)'
+            }
         }
-    })
+    })    
 }
- 
+
+        
 
 function applyListListeners() {
     // switch list
